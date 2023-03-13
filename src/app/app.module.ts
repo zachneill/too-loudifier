@@ -5,13 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
-import { YoutubePlayerComponent } from './youtube-player/youtube-player.component';
 import {YouTubePlayerModule} from "@angular/youtube-player";
 
 @NgModule({
   declarations: [
     AppComponent,
-    YoutubePlayerComponent
   ],
     imports: [
         BrowserModule,
@@ -20,6 +18,7 @@ import {YouTubePlayerModule} from "@angular/youtube-player";
         MatButtonModule,
         YouTubePlayerModule
     ],
+  exports: [AppComponent],
   providers: [],
   bootstrap: [AppComponent]
 })
