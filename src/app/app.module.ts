@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {YouTubePlayerModule} from "@angular/youtube-player";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import {YouTubePlayerModule} from "@angular/youtube-player";
         AppRoutingModule,
         BrowserAnimationsModule,
         MatButtonModule,
-        YouTubePlayerModule
+        YouTubePlayerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule
     ],
   exports: [AppComponent],
   providers: [],

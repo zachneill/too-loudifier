@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {YouTubePlayer} from "@angular/youtube-player";
 
 @Component({
@@ -6,24 +6,20 @@ import {YouTubePlayer} from "@angular/youtube-player";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   @ViewChild('player', {static: true}) player!: YouTubePlayer
 
-  tag: any;
   apiLoaded: boolean = false;
   firstScriptTag: any
-  volume: number | null = null;
   audioContext = new AudioContext();
-  masterGainNode = this.audioContext.createGain();
   analyser: AnalyserNode | undefined
   dataArray: Uint8Array | undefined
   micVol: number = 0;
+  videoId: string = 'bc0KhhjJP98'
+  started: boolean = false;
+  constant: number = .4
 
   constructor() {
-
-  }
-
-  ngOnInit(): void {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
         const microphoneSource = this.audioContext.createMediaStreamSource(stream);
@@ -33,42 +29,41 @@ export class AppComponent implements OnInit {
         this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
       })
       .catch((err) => {
-        console.log("messed something up", err)
+        console.log("Problem encountered with user media; with error: ", err)
       });
-    if (!this.apiLoaded) {
-      this.tag = document.createElement('script')
-      this.tag.src = "https://www.youtube.com/iframe_api";
-      this.firstScriptTag = document.getElementsByTagName('script')[0]
-      this.firstScriptTag.parentNode.insertBefore(this.tag, this.firstScriptTag);
-      this.apiLoaded = true;
-    }
   }
 
-  onReady(event: YT.PlayerEvent): void {
+  onReady(): void {
     this.player.playVideo()
-    this.player.setVolume(20)
-  }
-
-  async getVolume() {
-    this.volume = this.player.getVolume()
-  }
-
-  setVolume() {
-
+    this.player.setVolume(10)
+    setInterval(()=>{
+      this.getMicrophoneVolume()
+      this.player.setVolume(this.micVol+7)
+    }, 50);
   }
 
   getMicrophoneVolume() {
-    this.analyser?.getByteFrequencyData(<Uint8Array>this.dataArray);
-    let micVol = this.dataArray?.reduce((prev, curr) => Math.max(prev, curr));
-    this.micVol = micVol === undefined ? 0 : micVol * .4
-    console.log(this.micVol)
+    this.analyser?.getByteFrequencyData(<Uint8Array>this.dataArray)
+    let micVol = this.dataArray?.reduce((prev, curr) => Math.max(prev, curr))
+    this.micVol = micVol === undefined ? 0 : micVol * this.constant
   }
 
-  blast(){
-    setInterval(()=>{
-      this.getMicrophoneVolume()
-      this.player.setVolume(this.micVol+10)
-    }, 50);
+  start(url: string){
+    this.started = true
+    this.videoId = url.split("v=")[1]
+    if (!this.apiLoaded) {
+      let tag = document.createElement('script')
+      tag.src = "https://www.youtube.com/iframe_api";
+      this.firstScriptTag = document.getElementsByTagName('script')[0]
+      this.firstScriptTag.parentNode.insertBefore(tag, this.firstScriptTag)
+      this.apiLoaded = true;
+    }
+  }
+  reload() {
+    location.reload()
+  }
 
+  changeConstant(constant: number) {
+    this.constant = Math.round(1000 * (this.constant + constant)) / 1000
   }
 }

@@ -1,9 +1,28 @@
-<button (click)="getMicrophoneVolume()">Get Mic</button>
-<button (click)="getVolume()">Get Volume</button>
-<button (click)="blast()">Count</button>
-<div *ngIf="volume !== null">The current volume is {{ volume }}</div>
-<div *ngIf="micVol !== null">The current mic volume is {{ micVol }}</div>
+<div style="text-align: center; position: relative; top: 20%">
+  <youtube-player #player [videoId]="videoId" [suggestedQuality]="'small'"
+              (ready)="onReady()"></youtube-player>
+</div>
 
+<div style="position: absolute; left:5%; align-content: center; top: 50px; ">
+  <mat-form-field>
+    <mat-label>Enter a YouTube Link</mat-label>
+    <textarea cdkTextareaAutosize #input matInput value="https://www.youtube.com/watch?v=bc0KhhjJP98"></textarea>
+  </mat-form-field>
+  <button mat-button color="primary" (click)="reload()">Reset</button>
+  <button *ngIf="!started" mat-button color="accent" (click)="start(input.value)">Start</button>
+</div>
 
-<youtube-player #player videoId="bc0KhhjJP98" [suggestedQuality]="'small'"
-                (ready)="onReady($event)"></youtube-player>
+<mat-card *ngIf="started" style="position: absolute; right:5%; align-content: center; top: 50px; text-align: center">
+  <mat-card-content>
+
+    <p class="mat-headline-6" *ngIf="started">Wildness constant: {{this.constant}}</p>
+    <button *ngIf="started" mat-button color="accent" (click)="changeConstant(.025)">Wilder</button>
+    <button *ngIf="started" mat-button color="primary" (click)="changeConstant(-.025)">Less Wild</button>
+  </mat-card-content>
+</mat-card>
+
+<div style="position: relative; text-align: center; top: 25%">
+  <p *ngIf="!started" class="mat-headline-2">Too Loudifier</p>
+  <p *ngIf="!started">An app that plays music slightly too loud. The louder you speak, the louder the volume.</p>
+  <p *ngIf="started">The louder you speak into the microphone, the louder the volume.</p>
+</div>
