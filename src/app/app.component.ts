@@ -17,20 +17,13 @@ export class AppComponent implements OnInit {
   masterGainNode = this.audioContext.createGain();
   analyser: AnalyserNode | undefined
   dataArray: Uint8Array | undefined
-  micVol: number | null | undefined = null;
+  micVol: number = 0;
 
   constructor() {
 
   }
 
   ngOnInit(): void {
-    if (!this.apiLoaded) {
-      this.tag = document.createElement('script')
-      this.tag.src = "https://www.youtube.com/iframe_api";
-      this.firstScriptTag = document.getElementsByTagName('script')[0]
-      this.firstScriptTag.parentNode.insertBefore(this.tag, this.firstScriptTag);
-      this.apiLoaded = true;
-    }
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
         const microphoneSource = this.audioContext.createMediaStreamSource(stream);
@@ -42,6 +35,13 @@ export class AppComponent implements OnInit {
       .catch((err) => {
         console.log("messed something up", err)
       });
+    if (!this.apiLoaded) {
+      this.tag = document.createElement('script')
+      this.tag.src = "https://www.youtube.com/iframe_api";
+      this.firstScriptTag = document.getElementsByTagName('script')[0]
+      this.firstScriptTag.parentNode.insertBefore(this.tag, this.firstScriptTag);
+      this.apiLoaded = true;
+    }
   }
 
   onReady(event: YT.PlayerEvent): void {
@@ -59,7 +59,16 @@ export class AppComponent implements OnInit {
 
   getMicrophoneVolume() {
     this.analyser?.getByteFrequencyData(<Uint8Array>this.dataArray);
-    // return this.dataArray?.reduce((prev, curr) => Math.max(prev, curr));
-    this.micVol = this.dataArray?.reduce((prev, curr) => Math.max(prev, curr));
+    let micVol = this.dataArray?.reduce((prev, curr) => Math.max(prev, curr));
+    this.micVol = micVol === undefined ? 0 : micVol * .4
+    console.log(this.micVol)
+  }
+
+  blast(){
+    setInterval(()=>{
+      this.getMicrophoneVolume()
+      this.player.setVolume(this.micVol+10)
+    }, 50);
+
   }
 }
