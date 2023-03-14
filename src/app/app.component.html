@@ -1,12 +1,8 @@
-<input #main />
-
-<youtube-player #player [suggestedQuality]="'small'" (ready)="onReady()" videoId="bc0KhhjJP98"></youtube-player>
+<button (click)="getMicrophoneVolume()">Get Mic</button>
 <button (click)="getVolume()">Get Volume</button>
 <div *ngIf="volume !== null">The current volume is {{ volume }}</div>
+<div *ngIf="micVol !== null">The current mic volume is {{ micVol }}</div>
 
-<!--<div id="player" #player></div>-->
 
-<!--<iframe id="ytplayer" type="text/html" width="640" height="360"-->
-<!--        src="https://www.youtube.com/embed/M7lc1UVf-VE"-->
-<!--        frameborder="0"></iframe>-->
-<!--<div id="player"></div>-->
+<youtube-player #player videoId="bc0KhhjJP98" [suggestedQuality]="'small'"
+                (ready)="onReady($event)"></youtube-player>

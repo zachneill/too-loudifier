@@ -8,13 +8,19 @@ import {YouTubePlayer} from "@angular/youtube-player";
 })
 export class AppComponent implements OnInit {
   @ViewChild('player', {static: true}) player!: YouTubePlayer
+
   tag: any;
   apiLoaded: boolean = false;
   firstScriptTag: any
   volume: number | null = null;
+  audioContext = new AudioContext();
+  masterGainNode = this.audioContext.createGain();
+  analyser: AnalyserNode | undefined
+  dataArray: Uint8Array | undefined
+  micVol: number | null | undefined = null;
 
-  // player: any
   constructor() {
+
   }
 
   ngOnInit(): void {
@@ -24,34 +30,36 @@ export class AppComponent implements OnInit {
       this.firstScriptTag = document.getElementsByTagName('script')[0]
       this.firstScriptTag.parentNode.insertBefore(this.tag, this.firstScriptTag);
       this.apiLoaded = true;
-
     }
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then((stream) => {
+        const microphoneSource = this.audioContext.createMediaStreamSource(stream);
+        this.analyser = this.audioContext.createAnalyser();
+        microphoneSource.connect(this.analyser);
+
+        this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+      })
+      .catch((err) => {
+        console.log("messed something up", err)
+      });
   }
 
-  onReady() {
-    console.log(this.player.getDuration())
+  onReady(event: YT.PlayerEvent): void {
     this.player.playVideo()
     this.player.setVolume(20)
+  }
+
+  async getVolume() {
+    this.volume = this.player.getVolume()
+  }
+
+  setVolume() {
 
   }
 
-
-  async getVolume() {
-    const peerConnection = new RTCPeerConnection();
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const track = stream.getAudioTracks()[0];
-    peerConnection.addTrack(track, stream);
-
-    const stats = await peerConnection.getStats(track);
-    console.log(stats)
-    stats.forEach((value) =>{
-      console.log(value)
-      if (value.type === 'media-source' && value.trackIdentifier === track.id){
-        console.log(value.audioLevel)
-        console.log(value)
-        this.volume = value.audioLevel;
-      }
-    })
-    peerConnection.close();
+  getMicrophoneVolume() {
+    this.analyser?.getByteFrequencyData(<Uint8Array>this.dataArray);
+    // return this.dataArray?.reduce((prev, curr) => Math.max(prev, curr));
+    this.micVol = this.dataArray?.reduce((prev, curr) => Math.max(prev, curr));
   }
 }
