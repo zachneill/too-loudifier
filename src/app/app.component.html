@@ -24,5 +24,11 @@
 <div style="position: relative; text-align: center; top: 25%">
   <p *ngIf="!started" class="mat-headline-2">Too Loudifier</p>
   <p *ngIf="!started">An app that plays music slightly too loud. The louder you speak, the louder the volume.</p>
-  <p *ngIf="started">The louder you speak into the microphone, the louder the volume.</p>
+  <p *ngIf="started">Speak into the microphone. Nothing happening? <button mat-raised-button (click)="reload()">Reset</button> It may take several refreshes.</p>
 </div>
+<footer class="mat-body-1" style="position: absolute; bottom: 0; width: 100%; overflow: hidden">
+  <p style="text-align: center" >
+    <a mat-button color="warn" href="https://github.com/zachneill/too-loudifier" target="_blank">Source code</a>
+  | © 2023 Zach Neill
+  </p>
+</footer>

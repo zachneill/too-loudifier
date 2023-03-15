@@ -35,17 +35,17 @@ export class AppComponent {
 
   onReady(): void {
     this.player.playVideo()
-    this.player.setVolume(10)
+    this.player.setVolume(0)
     setInterval(()=>{
       this.getMicrophoneVolume()
-      this.player.setVolume(this.micVol+7)
-    }, 50);
+      this.player.setVolume(this.micVol)
+    }, 35);
   }
 
   getMicrophoneVolume() {
     this.analyser?.getByteFrequencyData(<Uint8Array>this.dataArray)
     let micVol = this.dataArray?.reduce((prev, curr) => Math.max(prev, curr))
-    this.micVol = micVol === undefined ? 0 : micVol * this.constant
+    this.micVol = micVol === undefined || micVol <15 ? 0 : (micVol - 15) * this.constant
   }
 
   start(url: string){
