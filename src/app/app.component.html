@@ -20,7 +20,7 @@
   </mat-card-content>
 </mat-card>
 <div style="position: relative; text-align: center; top: 20%">
-  <button mat-raised-button *ngIf="started" (click)="pause()">{{!paused?'Pause':'Unpause'}}</button>
+  <button mat-raised-button *ngIf="started" (click)="this.paused = !this.paused">{{!paused?'Pause':'Unpause'}}</button>
 </div>
 
 <div style="position: relative; text-align: center; top: 25%">
