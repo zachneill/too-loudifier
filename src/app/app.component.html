@@ -14,20 +14,22 @@
 
 <mat-card *ngIf="started" style="position: absolute; right:5%; align-content: center; top: 50px; text-align: center">
   <mat-card-content>
-
     <p class="mat-headline-6" *ngIf="started">Wildness constant: {{this.constant}}</p>
     <button *ngIf="started" mat-button color="accent" (click)="changeConstant(.025)">Wilder</button>
     <button *ngIf="started" mat-button color="primary" (click)="changeConstant(-.025)">Less Wild</button>
   </mat-card-content>
 </mat-card>
+<div style="position: relative; text-align: center; top: 20%">
+  <button mat-raised-button *ngIf="started" (click)="pause()">{{!paused?'Pause':'Unpause'}}</button>
+</div>
 
 <div style="position: relative; text-align: center; top: 25%">
   <p *ngIf="!started" class="mat-headline-2">Too Loudifier</p>
   <p *ngIf="!started">An app that plays music slightly too loud. The louder you speak, the louder the volume.</p>
   <p *ngIf="started">Speak into the microphone. Nothing happening? <button mat-raised-button (click)="reload()">Reset</button> It may take several refreshes.</p>
 </div>
-<footer class="mat-body-1" style="position: absolute; bottom: 0; width: 100%; overflow: hidden">
-  <p style="text-align: center" >
+<footer class="mat-body-1" style="position: absolute; bottom: 0; width: 99%">
+  <p style="text-align: right; padding-right: 10px" >
     <a mat-button color="warn" href="https://github.com/zachneill/too-loudifier" target="_blank">Source code</a>
   | © 2023 Zach Neill
   </p>
