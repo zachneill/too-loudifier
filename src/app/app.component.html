@@ -1,9 +1,9 @@
-<div style="text-align: center; position: relative; top: 20%">
+<div class="relative-center" style="top: 20%">
   <youtube-player #player [videoId]="videoId" [suggestedQuality]="'small'"
               (ready)="onReady()"></youtube-player>
 </div>
 
-<div style="position: absolute; left:5%; align-content: center; top: 50px; ">
+<div style="position: absolute; left:5%; top: 50px;">
   <mat-form-field>
     <mat-label>Enter a YouTube Link</mat-label>
     <textarea cdkTextareaAutosize #input matInput value="https://www.youtube.com/watch?v=bc0KhhjJP98"></textarea>
@@ -12,18 +12,18 @@
   <button *ngIf="!started" mat-button color="accent" (click)="start(input.value)">Start</button>
 </div>
 
-<mat-card *ngIf="started" style="position: absolute; right:5%; align-content: center; top: 50px; text-align: center">
+<mat-card *ngIf="started" style="position: absolute; right:5%; top: 50px; text-align: center">
   <mat-card-content>
     <p class="mat-headline-6" *ngIf="started">Wildness constant: {{this.constant}}</p>
     <button *ngIf="started" mat-button color="accent" (click)="changeConstant(.025)">Wilder</button>
     <button *ngIf="started" mat-button color="primary" (click)="changeConstant(-.025)">Less Wild</button>
   </mat-card-content>
 </mat-card>
-<div style="position: relative; text-align: center; top: 20%">
+<div class="relative-center" style="top: 20%">
   <button mat-raised-button *ngIf="started" (click)="this.paused = !this.paused">{{!paused?'Pause':'Unpause'}}</button>
 </div>
 
-<div style="position: relative; text-align: center; top: 25%">
+<div class="relative-center" style="top: 25%">
   <p *ngIf="!started" class="mat-headline-2">Too Loudifier</p>
   <p *ngIf="!started">An app that plays music slightly too loud. The louder you speak, the louder the volume.</p>
   <p *ngIf="started">Speak into the microphone. Nothing happening? <button mat-raised-button (click)="reload()">Reset</button> It may take several refreshes.</p>
